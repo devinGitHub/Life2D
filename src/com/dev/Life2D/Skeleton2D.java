@@ -1,6 +1,8 @@
 
    package com.dev.Life2D;
 
+import java.util.ArrayList;
+
 import com.dev.Life2D.R;
 import android.app.Activity;
    import android.os.Bundle;
@@ -34,10 +36,10 @@ import android.content.*;
 
            mMainPanel = new Panel(this);
            
-           /*
-           mMainPanel.addFocusables(1);
-           mMainPanel.addFocusables(R.layout.main);
-           */
+           ArrayList<View> views = new ArrayList<View>();
+           views.add(  findViewById(R.layout.main) );
+		mMainPanel.addFocusables(views, DIRECTION_LEFT);
+          
            setContentView(mMainPanel,new ViewGroup.LayoutParams(CANVAS_X,CANVAS_Y));
            //setContentView(R.layout.main);
            // Hook up button presses to the appropriate event handler.
