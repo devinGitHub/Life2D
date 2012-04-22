@@ -4,21 +4,20 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-   
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.89"
-        android:text="@string/hello" />
-	<View
-	    android:id="@+id/MainPanel" 
-	    android:layout_width="fill_parent"
-        android:layout_height="250dip"
-	    />
-    <Button
-        android:id="@+id/back"
-        style="@style/ActionButton"
-        android:layout_width="match_parent"
-        android:text="@string/back" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+        <Button
+            android:id="@+id/back"
+            style="@style/ActionButton"
+            android:layout_width="110dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:text="@string/back" />
+
+    </RelativeLayout>
 
 </LinearLayout>

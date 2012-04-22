@@ -22,7 +22,7 @@ import android.content.*;
        private int direction = DIRECTION_RIGHT;
 
        public static final int CANVAS_X = 320, CANVAS_Y = 480;
-       public static final int WORLD_X = 200, WORLD_Y = 200;
+       public static final int WORLD_X = 250, WORLD_Y = 250;
        public static final int BOX_SIZE = 10;
        
        private int mBoxX = 0;
@@ -33,8 +33,12 @@ import android.content.*;
            super.onCreate(savedInstanceState);
 
            mMainPanel = new Panel(this);
-           setContentView(mMainPanel,new ViewGroup.LayoutParams(CANVAS_X,CANVAS_Y));
            
+           /*
+           mMainPanel.addFocusables(1);
+           mMainPanel.addFocusables(R.layout.main);
+           */
+           setContentView(mMainPanel,new ViewGroup.LayoutParams(CANVAS_X,CANVAS_Y));
            //setContentView(R.layout.main);
            // Hook up button presses to the appropriate event handler.
            //((Button) findViewById(R.id.back)).setOnClickListener(mBackListener); 
@@ -44,11 +48,11 @@ import android.content.*;
 
        private synchronized void updatePhysics()
        {
-           if(mBoxX < 10)
+           if(mBoxX < 1)
            {
                direction = DIRECTION_RIGHT;
            }
-           else if(mBoxX > 250)
+           else if(mBoxX > (WORLD_X-BOX_SIZE))
            {
                direction = DIRECTION_LEFT;
            }
@@ -76,7 +80,7 @@ import android.content.*;
 	           canvas.clipRect(0,0,WORLD_X,WORLD_Y);
                canvas.drawColor(Color.DKGRAY);
 	           canvas.save();
-	           canvas.clipRect(mBoxX,20,mBoxX+10,30);
+	           canvas.clipRect(mBoxX,20,mBoxX+BOX_SIZE,30);
 	           canvas.drawColor(Color.RED);
 	
 	            //canvas.drawBitmap(scratch,mBoxX,10,paint);
