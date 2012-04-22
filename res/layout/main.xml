@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+   
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.89"
+        android:text="@string/hello" />
+	<View
+	    android:id="@+id/MainPanel" 
+	    android:layout_width="fill_parent"
+        android:layout_height="250dip"
+	    />
+    <Button
+        android:id="@+id/back"
+        style="@style/ActionButton"
+        android:layout_width="match_parent"
+        android:text="@string/back" />
+
+</LinearLayout>
