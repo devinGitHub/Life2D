@@ -20,7 +20,7 @@ import android.content.*;
        private Panel mMainPanel;
 
        public boolean mbStart = true;
-       private volatile boolean running = true;
+       private volatile boolean running = false;
        private int direction = DIRECTION_RIGHT;
 
        public static final int CANVAS_X = 320, CANVAS_Y = 480;
@@ -28,6 +28,10 @@ import android.content.*;
        public static final int BOX_SIZE = 10;
        
        private int mBoxX = 0;
+       
+       private WorldGrid mWorldGrid;
+       
+       private Bitmap mCursorBitmap;
        
        @Override
        public void onCreate(Bundle savedInstanceState)
@@ -45,7 +49,18 @@ import android.content.*;
            // Hook up button presses to the appropriate event handler.
            //((Button) findViewById(R.id.back)).setOnClickListener(mBackListener); 
            
+           mWorldGrid = new WorldGrid(1,1);
+           mWorldGrid.exampleSeed2020();
+           
+           setOffscreenBitmap();
+           
            (new Thread(new AnimationLoop())).start();
+       }
+
+       private void setOffscreenBitmap()
+       {
+            mCursorBitmap = Bitmap.createBitmap(10,10,Bitmap.Config.ARGB_8888);
+            mCursorBitmap.eraseColor(Color.RED);
        }
 
        private synchronized void updatePhysics()
@@ -68,6 +83,7 @@ import android.content.*;
         	   mBoxX -= 1;
            }
        }
+       
 
        private synchronized void doDraw(Canvas canvas, Paint paint)
        {
@@ -82,10 +98,13 @@ import android.content.*;
 	           canvas.clipRect(0,0,WORLD_X,WORLD_Y);
                canvas.drawColor(Color.DKGRAY);
 	           canvas.save();
-	           canvas.clipRect(mBoxX,20,mBoxX+BOX_SIZE,30);
-	           canvas.drawColor(Color.RED);
+	           
+	           mWorldGrid.doDraw( canvas, paint );
+	           
+	           //canvas.clipRect(mBoxX,20,mBoxX+BOX_SIZE,30);
+	           //canvas.drawColor(Color.RED);
 	
-	            //canvas.drawBitmap(scratch,mBoxX,10,paint);
+	           canvas.drawBitmap(mCursorBitmap,mBoxX,20,paint);
 	
 	           canvas.restore();
            }
@@ -190,8 +209,11 @@ import android.content.*;
 
                        updatePhysics();
                        mMainPanel.postInvalidate();
+                       
+                       running = false; //temp, step-wise
                    }
                }
            }
        }
    }
+   
