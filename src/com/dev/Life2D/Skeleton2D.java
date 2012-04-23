@@ -20,7 +20,7 @@ import android.content.*;
        private Panel mMainPanel;
 
        public boolean mbStart = true;
-       private volatile boolean running = false;
+       private volatile boolean running = true;//false;
        private int direction = DIRECTION_RIGHT;
 
        public static final int CANVAS_X = 320, CANVAS_Y = 480;
@@ -60,7 +60,7 @@ import android.content.*;
        private void setOffscreenBitmap()
        {
             mCursorBitmap = Bitmap.createBitmap(10,10,Bitmap.Config.ARGB_8888);
-            mCursorBitmap.eraseColor(Color.RED);
+            mCursorBitmap.eraseColor(Color.argb(128, 255, 0, 0));
        }
 
        private synchronized void updatePhysics()
@@ -82,6 +82,7 @@ import android.content.*;
            {
         	   mBoxX -= 1;
            }
+           mWorldGrid.updatePhysics();
        }
        
 
@@ -159,6 +160,27 @@ import android.content.*;
        {
            if(keyCode == KeyEvent.KEYCODE_DPAD_CENTER)
            {
+        	   mWorldGrid.togglePoint( 	mWorldGrid.mGridCursor.mPosX, mWorldGrid.mGridCursor.mPosY, true );
+           }
+           if(keyCode == KeyEvent.KEYCODE_DPAD_RIGHT)
+           {
+        	   mWorldGrid.mGridCursor.moveX(1);
+           }
+           if(keyCode == KeyEvent.KEYCODE_DPAD_LEFT)
+           {
+        	   mWorldGrid.mGridCursor.moveX(-1);
+           }
+           if(keyCode == KeyEvent.KEYCODE_DPAD_UP)
+           {
+        	   mWorldGrid.mGridCursor.moveY(-1);
+           }
+           if(keyCode == KeyEvent.KEYCODE_DPAD_DOWN)
+           {
+        	   mWorldGrid.mGridCursor.moveY(1);
+           }
+           
+           if(keyCode == KeyEvent.KEYCODE_SPACE)
+           {
                if(running)
                {
                    running = false;
@@ -168,7 +190,7 @@ import android.content.*;
                    running = true;
                }
            }
-           else if (keyCode == KeyEvent.KEYCODE_DPAD_DOWN)
+           else if (keyCode == KeyEvent.KEYCODE_Q)//KeyEvent.KEYCODE_DPAD_DOWN)
            {
                finish();
            }
@@ -203,15 +225,25 @@ import android.content.*;
                    {
                        try
                        {
-                           Thread.sleep(30);
+                           Thread.sleep(15);//30
                        }
                        catch(InterruptedException ex) {}
 
                        updatePhysics();
                        mMainPanel.postInvalidate();
                        
-                       running = false; //temp, step-wise
+                       //running = false; //temp, step-wise
                    }
+                   while(!running)
+                   {
+                       try
+                       {
+                           Thread.sleep(15);//30
+                       }
+                       catch(InterruptedException ex) {}
+                	   
+                	   mMainPanel.postInvalidate();
+                   }               
                }
            }
        }

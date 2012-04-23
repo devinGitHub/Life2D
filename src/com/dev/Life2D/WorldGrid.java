@@ -7,6 +7,8 @@ public class WorldGrid {
 	
 	public Bitmap mGridBitmap;
 	
+	public GridCursor mGridCursor;
+	
 	public static final int DRAW_SCALE = 3;
 	public WorldGrid( int sizeX, int sizeY )
 	{
@@ -29,9 +31,32 @@ public class WorldGrid {
 		mSizeX = sizeX;
 		mSizeY = sizeY;
 		mCurFrame = 0;
+		
+		mGridCursor = new GridCursor( 2.0f, mSizeX, mSizeY );
 	}
 	
-	public void doDraw( Canvas canvas, Paint paint )
+	public void togglePoint( int x, int y, boolean pushToBitmap )
+	{
+		if( mGrid[mCurFrame][x][y] > 0 )
+		{
+			mGrid[mCurFrame][x][y] = 0;
+			if( pushToBitmap )
+			{
+				mGridBitmap.setPixel(x, y, Color.BLACK);
+			}
+		}
+		else
+		{
+			mGrid[mCurFrame][x][y] = 1;			
+			if( pushToBitmap )
+			{
+				mGridBitmap.setPixel(x, y, Color.GREEN);
+			}
+		}
+		
+	}
+	
+	public void updatePhysics()
 	{
 		int newFrame = (mCurFrame+1)%2;
 		for( int i=0; i<mSizeX; i++ )
@@ -45,29 +70,21 @@ public class WorldGrid {
 			    }
 			    else
 			    {
-				    mGridBitmap.setPixel(i,  j, Color.BLACK);
+				    mGridBitmap.setPixel(i, j, Color.BLACK);
  			    }
-				
-				/*
-				canvas.save();
-				   canvas.clipRect(i*DRAW_SCALE,j*DRAW_SCALE,(i+1)*DRAW_SCALE,(j+1)*DRAW_SCALE);
-		           if( mGrid[i][j] > 0 )
-		           {
-		        	   canvas.drawColor(Color.GREEN);
-		           }
-		           else
-		           {
-		        	   canvas.drawColor(Color.BLACK);
-		           }
-		        canvas.restore();
-		        */
 			}
 		}
+		mCurFrame = newFrame;
+		
+	}
+	public void doDraw( Canvas canvas, Paint paint )
+	{
 		Matrix tempScaleMatrix = new Matrix();
 		tempScaleMatrix.setScale(2.0f, 2.0f);
 		
 		canvas.drawBitmap(mGridBitmap, tempScaleMatrix, paint);
-		mCurFrame = newFrame;
+		
+		mGridCursor.doDraw(canvas, paint);
 	}
 	
 	public void calcNewFramePt( int i, int j, int curFrame, int newFrame )
@@ -145,14 +162,15 @@ public class WorldGrid {
 
 		mGrid[0][4][4] = 1; 
 		mGrid[0][4][5] = 1; 
-		
+		*/
+		///*
 		//blinker
 		mGrid[0][30][4] = 1;
 		mGrid[0][30][5] = 1;
 		mGrid[0][30][6] = 1;
-        */
+        //*/
 		
-		/*
+		///*
 		//beacon
 		mGrid[0][0][0] = 1; 
 		mGrid[0][0][1] = 1; 
@@ -165,9 +183,9 @@ public class WorldGrid {
 
 		mGrid[0][3][2] = 1; 
 		mGrid[0][3][3] = 1; 
-        */
+        //*/
 		
-		/*
+		///*
 		//glider
 		mGrid[0][40][4] = 1;
 		mGrid[0][40][5] = 1;
@@ -184,5 +202,6 @@ public class WorldGrid {
 		mGrid[0][4][1] = 1;	
 		
 	}
+    
 	
 }
