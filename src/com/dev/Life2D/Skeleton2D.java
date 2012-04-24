@@ -24,7 +24,7 @@ public class Skeleton2D extends Activity
        private Panel mEditPanel;
 
        public boolean mbStart = true;
-       private volatile boolean running = true;
+       private volatile boolean running = true;//false;
        private int direction = DIRECTION_RIGHT;
 
        public static final int CANVAS_X = 320, CANVAS_Y = 480; //no longer used
@@ -33,6 +33,10 @@ public class Skeleton2D extends Activity
        public static final int BOX_SIZE = 10;
        
        private int mBoxX = 0;
+       
+       private WorldGrid mWorldGrid;
+       
+       private Bitmap mCursorBitmap;
        
        @Override
        public void onCreate(Bundle savedInstanceState)
@@ -52,7 +56,18 @@ public class Skeleton2D extends Activity
            // Hook up button presses to the appropriate event handler.
            ((Button) findViewById(R.id.back)).setOnClickListener(mBackListener); 
            
+           mWorldGrid = new WorldGrid(1,1);
+           mWorldGrid.exampleSeed2020();
+           
+           setOffscreenBitmap();
+           
            (new Thread(new AnimationLoop())).start();
+       }
+
+       private void setOffscreenBitmap()
+       {
+            mCursorBitmap = Bitmap.createBitmap(10,10,Bitmap.Config.ARGB_8888);
+            mCursorBitmap.eraseColor(Color.argb(128, 255, 0, 0));
        }
 
        private synchronized void updatePhysics()
@@ -74,7 +89,9 @@ public class Skeleton2D extends Activity
            {
         	   mBoxX -= 1;
            }
+           mWorldGrid.updatePhysics();
        }
+       
 
        private synchronized void doDraw(Canvas canvas, Paint paint)
        {
@@ -89,10 +106,13 @@ public class Skeleton2D extends Activity
 	           canvas.clipRect(0,0,WORLD_X,WORLD_Y);
                canvas.drawColor(Color.DKGRAY);
 	           canvas.save();
-	           canvas.clipRect(mBoxX,20,mBoxX+BOX_SIZE,30);
-	           canvas.drawColor(Color.RED);
+	           
+	           mWorldGrid.doDraw( canvas, paint );
+	           
+	           //canvas.clipRect(mBoxX,20,mBoxX+BOX_SIZE,30);
+	           //canvas.drawColor(Color.RED);
 	
-	            //canvas.drawBitmap(scratch,mBoxX,10,paint);
+	           canvas.drawBitmap(mCursorBitmap,mBoxX,20,paint);
 	
 	           canvas.restore();
            }
@@ -147,6 +167,27 @@ public class Skeleton2D extends Activity
        {
            if(keyCode == KeyEvent.KEYCODE_DPAD_CENTER)
            {
+        	   mWorldGrid.togglePoint( 	mWorldGrid.mGridCursor.mPosX, mWorldGrid.mGridCursor.mPosY, true );
+           }
+           if(keyCode == KeyEvent.KEYCODE_DPAD_RIGHT)
+           {
+        	   mWorldGrid.mGridCursor.moveX(1);
+           }
+           if(keyCode == KeyEvent.KEYCODE_DPAD_LEFT)
+           {
+        	   mWorldGrid.mGridCursor.moveX(-1);
+           }
+           if(keyCode == KeyEvent.KEYCODE_DPAD_UP)
+           {
+        	   mWorldGrid.mGridCursor.moveY(-1);
+           }
+           if(keyCode == KeyEvent.KEYCODE_DPAD_DOWN)
+           {
+        	   mWorldGrid.mGridCursor.moveY(1);
+           }
+           
+           if(keyCode == KeyEvent.KEYCODE_SPACE)
+           {
                if(running)
                {
                    running = false;
@@ -156,7 +197,7 @@ public class Skeleton2D extends Activity
                    running = true;
                }
            }
-           else if (keyCode == KeyEvent.KEYCODE_DPAD_DOWN)
+           else if (keyCode == KeyEvent.KEYCODE_Q)//KeyEvent.KEYCODE_DPAD_DOWN)
            {
                finish();
            }
@@ -191,14 +232,27 @@ public class Skeleton2D extends Activity
                    {
                        try
                        {
-                           Thread.sleep(30);
+                           Thread.sleep(15);//30
                        }
                        catch(InterruptedException ex) {}
 
                        updatePhysics();
                        mMainPanel.postInvalidate();
+                       
+                       //running = false; //temp, step-wise
                    }
+                   while(!running)
+                   {
+                       try
+                       {
+                           Thread.sleep(15);//30
+                       }
+                       catch(InterruptedException ex) {}
+                	   
+                	   mMainPanel.postInvalidate();
+                   }               
                }
            }
        }
    }
+   
