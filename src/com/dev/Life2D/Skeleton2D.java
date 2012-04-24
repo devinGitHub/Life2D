@@ -1,30 +1,35 @@
 
    package com.dev.Life2D;
 
-import java.util.ArrayList;
-
-import com.dev.Life2D.R;
-import android.app.Activity;
+   import com.dev.Life2D.R;
+   import android.app.Activity;
    import android.os.Bundle;
    import android.view.*;
-import android.view.View.OnClickListener;
-import android.widget.Button;
+   import android.view.View.OnClickListener;
+   import android.view.ViewGroup.LayoutParams;
+   import android.widget.Button;
    import android.graphics.*;
-import android.content.*;
+   import android.content.*;
 
-   public class Skeleton2D extends Activity
+   /**
+ * @author Mike
+ *
+ */
+public class Skeleton2D extends Activity
    {
        public static final int DIRECTION_RIGHT = 0, DIRECTION_LEFT = 1;
        static final private int BACK_ID = Menu.FIRST;
 
        private Panel mMainPanel;
+       private Panel mEditPanel;
 
        public boolean mbStart = true;
        private volatile boolean running = true;
        private int direction = DIRECTION_RIGHT;
 
-       public static final int CANVAS_X = 320, CANVAS_Y = 480;
+       public static final int CANVAS_X = 320, CANVAS_Y = 480; //no longer used
        public static final int WORLD_X = 250, WORLD_Y = 250;
+       public static final int EDITOR_X = 150, EDITOR_Y = 150;
        public static final int BOX_SIZE = 10;
        
        private int mBoxX = 0;
@@ -33,17 +38,19 @@ import android.content.*;
        public void onCreate(Bundle savedInstanceState)
        {
            super.onCreate(savedInstanceState);
-
-           mMainPanel = new Panel(this);
            
-           ArrayList<View> views = new ArrayList<View>();
-           views.add(  findViewById(R.layout.main) );
-		mMainPanel.addFocusables(views, DIRECTION_LEFT);
-          
-           setContentView(mMainPanel,new ViewGroup.LayoutParams(CANVAS_X,CANVAS_Y));
-           //setContentView(R.layout.main);
+           mMainPanel = new Panel(this);
+           mEditPanel = new Panel(this);
+           setContentView(R.layout.main);
+           
+           ViewGroup vgMain = (ViewGroup)findViewById(R.id.WorldWrapper);
+           vgMain.addView(mMainPanel,new ViewGroup.LayoutParams(WORLD_X,WORLD_Y));
+
+           ViewGroup vgEdit = (ViewGroup)findViewById(R.id.EditorWrapper);
+           vgEdit.addView(mEditPanel,new ViewGroup.LayoutParams(EDITOR_X,EDITOR_Y));
+
            // Hook up button presses to the appropriate event handler.
-           //((Button) findViewById(R.id.back)).setOnClickListener(mBackListener); 
+           ((Button) findViewById(R.id.back)).setOnClickListener(mBackListener); 
            
            (new Thread(new AnimationLoop())).start();
        }
@@ -90,28 +97,28 @@ import android.content.*;
 	           canvas.restore();
            }
        }
-
-       /**
-        * Called when your activity's options menu needs to be created.
-        */
-       @Override
-       public boolean onCreateOptionsMenu(Menu menu) {
-           super.onCreateOptionsMenu(menu);
-
-           menu.add(0, BACK_ID, 0, R.string.back).setShortcut('0', 'b');
-           return true;
-       }
-    
-       /**
-        * Called right before your activity's option menu is displayed.
-        */
-       @Override
-       public boolean onPrepareOptionsMenu(Menu menu) {
-           super.onPrepareOptionsMenu(menu);
-
-           return true;
-       }
-
+//
+//       /**
+//        * Called when your activity's options menu needs to be created.
+//        */
+//       @Override
+//       public boolean onCreateOptionsMenu(Menu menu) {
+//           super.onCreateOptionsMenu(menu);
+//
+//           menu.add(0, BACK_ID, 0, R.string.back).setShortcut('0', 'b');
+//           return true;
+//       }
+//    
+//       /**
+//        * Called right before your activity's option menu is displayed.
+//        */
+//       @Override
+//       public boolean onPrepareOptionsMenu(Menu menu) {
+//           super.onPrepareOptionsMenu(menu);
+//
+//           return true;
+//       }
+//
        /**
         * Called when a menu item is selected.
         */

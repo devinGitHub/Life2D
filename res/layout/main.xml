@@ -1,23 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical" >
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="fill_parent" >
+    
+    <TableRow android:layout_height="match_parent">        
+      <TableLayout android:id="@+id/WorldWrapper"  android:stretchColumns="1" 
+          android:layout_width="250dip"  android:layout_height="250dip" >
+          
+      <!-- View android:id="@+id/World" android:stretchColumns="1" 
+          android:layout_width="match_parent" android:layout_height="match_parent"/ -->       
+      </TableLayout>
 
-
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" >
-
-        <Button
-            android:id="@+id/back"
-            style="@style/ActionButton"
-            android:layout_width="110dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:text="@string/back" />
-
-    </RelativeLayout>
-
-</LinearLayout>
+      <TableLayout android:id="@+id/Separator" android:stretchColumns="2" 
+          android:layout_width="6dip"  android:layout_height="250dip" 
+          android:background="#00000000" /> 
+        
+      <TableLayout android:id="@+id/User"  >
+       <TableRow >
+          <TableLayout android:id="@+id/EditorWrapper"              
+             android:layout_width="150dip" android:layout_height="150dip"> 
+             
+           <!-- iew android:id="@+id/Editor" android:stretchColumns="4" android:background="#FF90AAAA" 
+                android:layout_width="150dip" android:layout_height="150dip"/-->                     
+         </TableLayout>    
+       </TableRow>
+       <TableRow >
+           <View android:layout_height="4dip" android:background="#00000000" />
+       </TableRow>
+       <TableRow>                 
+           <LinearLayout android:orientation="vertical" >
+             <Button android:id="@+id/back" style="@style/ActionButton"
+	            android:layout_width="match_parent" android:layout_height="34dip"
+	            android:text="@string/back" />        
+             <Button android:id="@+id/start" style="@style/ActionButton"
+	            android:layout_width="match_parent" android:layout_height="34dip"
+	            android:text="@string/start" />
+            </LinearLayout>      
+         </TableRow>
+      </TableLayout>
+   </TableRow>    
+</TableLayout>
