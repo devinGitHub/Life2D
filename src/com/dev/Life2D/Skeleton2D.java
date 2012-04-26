@@ -5,11 +5,12 @@
    import android.app.Activity;
    import android.os.Bundle;
    import android.view.*;
-   import android.view.View.OnClickListener;
-   import android.view.ViewGroup.LayoutParams;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
    import android.widget.Button;
    import android.graphics.*;
-   import android.content.*;
+import android.content.*;
+import android.content.pm.PackageManager.NameNotFoundException;
 
    /**
  * @author Mike
@@ -21,7 +22,7 @@ public class Skeleton2D extends Activity
        static final private int BACK_ID = Menu.FIRST;
 
        private Panel mMainPanel;
-       private Panel mEditPanel;
+       private View mEditPanel;
 
        public boolean mbStart = true;
        private volatile boolean running = true;//false;
@@ -44,15 +45,30 @@ public class Skeleton2D extends Activity
            super.onCreate(savedInstanceState);
            
            mMainPanel = new Panel(this);
-           mEditPanel = new Panel(this);
+           
+           try{
+               Context c =  createPackageContext("com.dev.Life2D", 0);
+               mEditPanel = new View(c);
+           }
+           catch(NameNotFoundException ex)
+           {
+        	   int ii=0; // place holder
+           }
+
            setContentView(R.layout.main);
            
            ViewGroup vgMain = (ViewGroup)findViewById(R.id.WorldWrapper);
+           mMainPanel.setFocusable(true);
            vgMain.addView(mMainPanel,new ViewGroup.LayoutParams(WORLD_X,WORLD_Y));
+           
 
            ViewGroup vgEdit = (ViewGroup)findViewById(R.id.EditorWrapper);
+           mEditPanel.setBackgroundColor(0xFF303030);
+           mEditPanel.setFocusable(true);
            vgEdit.addView(mEditPanel,new ViewGroup.LayoutParams(EDITOR_X,EDITOR_Y));
-
+           
+           ViewGroup vgTop = (ViewGroup)findViewById(R.id.LayoutTop);
+ 
            // Hook up button presses to the appropriate event handler.
            ((Button) findViewById(R.id.back)).setOnClickListener(mBackListener); 
            
@@ -60,7 +76,7 @@ public class Skeleton2D extends Activity
            mWorldGrid.exampleSeed2020();
            
            setOffscreenBitmap();
-           
+
            (new Thread(new AnimationLoop())).start();
        }
 
@@ -97,8 +113,6 @@ public class Skeleton2D extends Activity
        {
            if(mbStart)
            {
-	           //canvas.clipRect(0,0,250,250);
-               //canvas.drawColor(Color.DKGRAY);
                mbStart = false;
            }
            else
@@ -108,10 +122,6 @@ public class Skeleton2D extends Activity
 	           canvas.save();
 	           
 	           mWorldGrid.doDraw( canvas, paint );
-	           
-	           //canvas.clipRect(mBoxX,20,mBoxX+BOX_SIZE,30);
-	           //canvas.drawColor(Color.RED);
-	
 	           canvas.drawBitmap(mCursorBitmap,mBoxX,20,paint);
 	
 	           canvas.restore();
@@ -208,7 +218,7 @@ public class Skeleton2D extends Activity
        class Panel extends View
        {
            Paint paint;
-
+           
            public Panel(Context context)
            {
                super(context);
@@ -234,7 +244,11 @@ public class Skeleton2D extends Activity
                        {
                            Thread.sleep(15);//30
                        }
-                       catch(InterruptedException ex) {}
+                       catch(InterruptedException ex) 
+                       {
+                    	   int ii=0;//for breakpoint
+                    	   ii++;    //breakpoint info
+                       }
 
                        updatePhysics();
                        mMainPanel.postInvalidate();
