@@ -23,6 +23,7 @@ public class Skeleton2D extends Activity
 
        private Panel mMainPanel;
        private View mEditPanel;
+      // private EditorPanel mEditPanel;
 
        public boolean mbStart = true;
        private volatile boolean running = true;//false;
@@ -36,6 +37,7 @@ public class Skeleton2D extends Activity
        private int mBoxX = 0;
        
        private WorldGrid mWorldGrid;
+       private EditorPanel mEditorPanel;
        
        private Bitmap mCursorBitmap;
        
@@ -43,11 +45,15 @@ public class Skeleton2D extends Activity
        public void onCreate(Bundle savedInstanceState)
        {
            super.onCreate(savedInstanceState);
+           mWorldGrid = new WorldGrid(1,1);
+           mWorldGrid.exampleSeed2020();
+
            mMainPanel = new Panel(this);
            
            try{
                Context c =  createPackageContext("com.dev.Life2D", 0);
-               mEditPanel = new View(c);
+               mEditorPanel = new EditorPanel( c, mWorldGrid ); 
+               mEditPanel = mEditorPanel;//mEditPanel = new View(c);
            }
            catch(NameNotFoundException ex)
            {
@@ -70,8 +76,6 @@ public class Skeleton2D extends Activity
            // Hook up button presses to the appropriate event handler.
            ((Button) findViewById(R.id.back)).setOnClickListener(mBackListener); 
            
-           mWorldGrid = new WorldGrid(1,1);
-           mWorldGrid.exampleSeed2020();
            
            setOffscreenBitmap();
 
@@ -103,6 +107,7 @@ public class Skeleton2D extends Activity
            {
         	   mBoxX -= 1;
            }
+           //mEditorPanel.updateBitmap();
            mWorldGrid.updatePhysics();
        }
        
@@ -125,28 +130,7 @@ public class Skeleton2D extends Activity
 	           canvas.restore();
            }
        }
-//
-//       /**
-//        * Called when your activity's options menu needs to be created.
-//        */
-//       @Override
-//       public boolean onCreateOptionsMenu(Menu menu) {
-//           super.onCreateOptionsMenu(menu);
-//
-//           menu.add(0, BACK_ID, 0, R.string.back).setShortcut('0', 'b');
-//           return true;
-//       }
-//    
-//       /**
-//        * Called right before your activity's option menu is displayed.
-//        */
-//       @Override
-//       public boolean onPrepareOptionsMenu(Menu menu) {
-//           super.onPrepareOptionsMenu(menu);
-//
-//           return true;
-//       }
-//
+
        /**
         * Called when a menu item is selected.
         */
@@ -250,6 +234,7 @@ public class Skeleton2D extends Activity
 
                        updatePhysics();
                        mMainPanel.postInvalidate();
+                       mEditorPanel.postInvalidate();
                        
                        //running = false; //temp, step-wise
                    }
@@ -262,6 +247,7 @@ public class Skeleton2D extends Activity
                        catch(InterruptedException ex) {}
                 	   
                 	   mMainPanel.postInvalidate();
+                       mEditorPanel.postInvalidate();
                    }               
                }
            }
