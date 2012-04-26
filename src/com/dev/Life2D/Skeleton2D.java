@@ -5,12 +5,12 @@
    import android.app.Activity;
    import android.os.Bundle;
    import android.view.*;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup.LayoutParams;
+   import android.view.View.OnClickListener;
+   import android.view.ViewGroup.LayoutParams;
    import android.widget.Button;
    import android.graphics.*;
-import android.content.*;
-import android.content.pm.PackageManager.NameNotFoundException;
+   import android.content.*;
+   import android.content.pm.PackageManager.NameNotFoundException;
 
    /**
  * @author Mike
@@ -43,7 +43,6 @@ public class Skeleton2D extends Activity
        public void onCreate(Bundle savedInstanceState)
        {
            super.onCreate(savedInstanceState);
-           
            mMainPanel = new Panel(this);
            
            try{
@@ -54,11 +53,12 @@ public class Skeleton2D extends Activity
            {
         	   int ii=0; // place holder
            }
-
+           
            setContentView(R.layout.main);
            
            ViewGroup vgMain = (ViewGroup)findViewById(R.id.WorldWrapper);
            mMainPanel.setFocusable(true);
+
            vgMain.addView(mMainPanel,new ViewGroup.LayoutParams(WORLD_X,WORLD_Y));
            
 
@@ -66,8 +66,6 @@ public class Skeleton2D extends Activity
            mEditPanel.setBackgroundColor(0xFF303030);
            mEditPanel.setFocusable(true);
            vgEdit.addView(mEditPanel,new ViewGroup.LayoutParams(EDITOR_X,EDITOR_Y));
-           
-           ViewGroup vgTop = (ViewGroup)findViewById(R.id.LayoutTop);
  
            // Hook up button presses to the appropriate event handler.
            ((Button) findViewById(R.id.back)).setOnClickListener(mBackListener); 

@@ -2,11 +2,12 @@
 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="fill_parent" 
+    android:visibility="visible"
     android:id="@+id/LayoutTop">
-    
+
     <TableRow android:layout_height="match_parent">        
       <TableLayout android:id="@+id/WorldWrapper"  android:stretchColumns="1" 
-          android:layout_width="250dip"  android:layout_height="250dip" >
+          android:layout_width="250dip"  android:layout_height="250dip">"
           
       <!-- View android:id="@+id/World" android:stretchColumns="1" 
           android:layout_width="match_parent" android:layout_height="match_parent"/ -->       
@@ -16,7 +17,7 @@
           android:layout_width="6dip"  android:layout_height="250dip" 
           android:background="#00000000" /> 
         
-      <TableLayout android:id="@+id/User"  >
+      <TableLayout android:id="@+id/User"> 
        <TableRow >
           <TableLayout android:id="@+id/EditorWrapper"              
              android:layout_width="150dip" android:layout_height="150dip"> 
