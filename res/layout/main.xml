@@ -2,7 +2,8 @@
 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="fill_parent" 
-    android:id="@+id/LayoutTop">
+    android:id="@+id/LayoutTop"
+    android:visibility="visible">
     
     <TableRow android:layout_height="match_parent">        
       <TableLayout android:id="@+id/WorldWrapper"  android:stretchColumns="1" 

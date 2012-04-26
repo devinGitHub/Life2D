@@ -37,6 +37,9 @@ public class WorldGrid {
 	
 	public void togglePoint( int x, int y, boolean pushToBitmap )
 	{
+		x = getWrapCoordX( x );
+		y = getWrapCoordY( y );
+		
 		if( mGrid[mCurFrame][x][y] > 0 )
 		{
 			mGrid[mCurFrame][x][y] = 0;
@@ -54,6 +57,14 @@ public class WorldGrid {
 			}
 		}
 		
+	}
+	
+	public int getValue( int x, int y )
+	{
+		x = getWrapCoordX( x );
+		y = getWrapCoordY( y );
+		//get the value as currently displayed on-screen, rather than next frame
+		return  mGrid[(mCurFrame+1)%2][x][y]; 
 	}
 	
 	public void updatePhysics()

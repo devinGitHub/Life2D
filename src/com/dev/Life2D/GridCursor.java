@@ -15,7 +15,7 @@ class GridCursor
 	
 	private int mGridSizeX, mGridSizeY;
 	
-	public static final int CURSOR_BOX_HALFSIZE = 4; //4 points to any side of center
+	public static final int CURSOR_BOX_HALFSIZE = 4; //4 pixels/points to any side of center
 	
 	public GridCursor( float scaleFactor, int gridSizeX, int gridSizeY )
 	{
@@ -28,9 +28,14 @@ class GridCursor
 		initCursor();
 	}
 	
+	public int getCursorSize()
+	{
+		return CURSOR_BOX_HALFSIZE*2+1;
+	}
+		
 	public void initCursor()
 	{
-		int cursorSize = CURSOR_BOX_HALFSIZE*2+1;
+		int cursorSize = getCursorSize();
 		mCursorBM = Bitmap.createBitmap(cursorSize, cursorSize, Bitmap.Config.ARGB_8888);
 		//center
 		mCursorBM.setPixel(	CURSOR_BOX_HALFSIZE, CURSOR_BOX_HALFSIZE, 
@@ -45,7 +50,17 @@ class GridCursor
 		mCursorBM.setPixel(	CURSOR_BOX_HALFSIZE*2, CURSOR_BOX_HALFSIZE*2, 
 		           			Color.argb(64, 255, 255, 255) );
 	}
+
+	public int minIndexX()
+	{
+		return (mPosX - CURSOR_BOX_HALFSIZE);
+	}
 	
+	public int minIndexY()
+	{
+		return (mPosY - CURSOR_BOX_HALFSIZE);
+	}
+
 	public void moveX(int deltaX)
 	{
 		mPosX = mPosX + deltaX;
