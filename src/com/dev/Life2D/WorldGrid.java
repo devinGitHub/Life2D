@@ -35,7 +35,7 @@ public class WorldGrid {
 		mGridCursor = new GridCursor( 2.0f, mSizeX, mSizeY );
 	}
 	
-	public void togglePoint( int x, int y, boolean pushToBitmap )
+	public void togglePoint( int x, int y, boolean pushToBitmap)
 	{
 		x = getWrapCoordX( x );
 		y = getWrapCoordY( y );
@@ -59,12 +59,20 @@ public class WorldGrid {
 		
 	}
 	
-	public int getValue( int x, int y )
+	public int getValue( int x, int y, boolean curFrame )
 	{
 		x = getWrapCoordX( x );
 		y = getWrapCoordY( y );
-		//get the value as currently displayed on-screen, rather than next frame
-		return  mGrid[(mCurFrame+1)%2][x][y]; 
+		
+		if( curFrame )
+		{
+			//get the value as currently displayed on-screen, rather than next frame
+			return  mGrid[(mCurFrame+1)%2][x][y];
+		}
+		else
+		{
+			return  mGrid[mCurFrame][x][y];			
+		}
 	}
 	
 	public void updatePhysics()

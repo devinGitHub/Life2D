@@ -6,6 +6,7 @@
    import android.os.Bundle;
    import android.view.*;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup.LayoutParams;
    import android.widget.Button;
    import android.graphics.*;
@@ -50,11 +51,14 @@ public class Skeleton2D extends Activity
            mWorldGrid.exampleSeed2020();
 
            mMainPanel = new Panel(this);
+           mMainPanel.setFocusableInTouchMode(true);
            
            try{
                Context c =  createPackageContext("com.dev.Life2D", 0);
                mEditorPanel = new EditorPanel( c, mWorldGrid ); 
                mEditPanel = mEditorPanel;//mEditPanel = new View(c);
+               mEditPanel.setFocusableInTouchMode(true);
+              
            }
            catch(NameNotFoundException ex)
            {
@@ -66,7 +70,7 @@ public class Skeleton2D extends Activity
            ViewGroup vgMain = (ViewGroup)findViewById(R.id.WorldWrapper);
            mMainPanel.setFocusable(true);
            vgMain.addView(mMainPanel,new ViewGroup.LayoutParams(WORLD_X,WORLD_Y));
-           
+           mMainPanel.setOnTouchListener(mTouchListener);           
 
            ViewGroup vgEdit = (ViewGroup)findViewById(R.id.EditorWrapper);
            mEditPanel.setBackgroundColor(0xFF303030);
@@ -77,7 +81,6 @@ public class Skeleton2D extends Activity
  
            // Hook up button presses to the appropriate event handler.
            ((Button) findViewById(R.id.back)).setOnClickListener(mBackListener); 
-           
            
            setOffscreenBitmap();
 
@@ -109,7 +112,7 @@ public class Skeleton2D extends Activity
            {
         	   mBoxX -= 1;
            }
-           //mEditorPanel.updateBitmap();
+           mEditorPanel.updatePhysics();
            mWorldGrid.updatePhysics();
        }
        
@@ -155,6 +158,25 @@ public class Skeleton2D extends Activity
                finish();
            }
        };
+       
+
+	   OnTouchListener mTouchListener = new OnTouchListener() 
+	   {
+			public boolean onTouch(View v, MotionEvent event)
+			{
+				
+				float fX = event.getX();
+				float fY = event.getY();
+				int x = (int)(fX*mWorldGrid.mSizeX/mMainPanel.getWidth());
+				int y = (int)(fY*mWorldGrid.mSizeY/mMainPanel.getHeight());
+				
+				mWorldGrid.mGridCursor.mPosX = x;
+				mWorldGrid.mGridCursor.mPosY = y;
+				
+				return true;
+			}
+		};
+
        
        @Override
        public boolean onKeyDown(int keyCode, KeyEvent event)
@@ -248,6 +270,8 @@ public class Skeleton2D extends Activity
                        }
                        catch(InterruptedException ex) {}
                 	   
+                       mEditorPanel.updatePhysics();
+                       
                 	   mMainPanel.postInvalidate();
                        mEditorPanel.postInvalidate();
                    }               
