@@ -1,18 +1,20 @@
 
-   package com.dev.Life2D;
+package com.dev.Life2D;
 
-   import com.dev.Life2D.R;
-   import android.app.Activity;
-   import android.os.Bundle;
-   import android.view.*;
-   import android.view.View.OnClickListener;
-   import android.view.ViewGroup.LayoutParams;
-   import android.widget.Button;
-   import android.graphics.*;
-   import android.content.*;
-   import android.content.pm.PackageManager.NameNotFoundException;
+import com.dev.Life2D.R;
+import android.app.Activity;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.*;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
+import android.widget.Button;
+import android.widget.Toast;
+import android.graphics.*;
+import android.content.*;
+import android.content.pm.PackageManager.NameNotFoundException;
 
-   /**
+/**
  * @author Mike
  *
  */
@@ -41,6 +43,8 @@ public class Skeleton2D extends Activity
        
        private Bitmap mCursorBitmap;
        
+       OrientationEventListener orientationListener;
+       
        @Override
        public void onCreate(Bundle savedInstanceState)
        {
@@ -49,14 +53,13 @@ public class Skeleton2D extends Activity
            mWorldGrid.exampleSeed2020();
 
            mMainPanel = new Panel(this);
-           
+           Context c = null;
            try{
-               Context c =  createPackageContext("com.dev.Life2D", 0);
+               c =  createPackageContext("com.dev.Life2D", 0);
                mEditorPanel = new EditorPanel( c, mWorldGrid ); 
                mEditPanel = mEditorPanel;//mEditPanel = new View(c);
            }
-           catch(NameNotFoundException ex)
-           {
+           catch(NameNotFoundException ex){
         	   int ii=0; // place holder
            }
            
@@ -67,22 +70,43 @@ public class Skeleton2D extends Activity
 
            vgMain.addView(mMainPanel,new ViewGroup.LayoutParams(WORLD_X,WORLD_Y));
            
-
            ViewGroup vgEdit = (ViewGroup)findViewById(R.id.EditorWrapper);
            mEditPanel.setBackgroundColor(0xFF303030);
            mEditPanel.setFocusable(true);
            vgEdit.addView(mEditPanel,new ViewGroup.LayoutParams(EDITOR_X,EDITOR_Y));
- 
+           
+           OrientationEventListener orientationListen = new OrientationEventListener(c)
+	       {
+        	   int orientation;
+        	   int lastOrientation = -1;
+	    	   @Override
+	    	   public void onOrientationChanged( int direction)
+	    	   {
+	    		   if( direction > -1 ) orientation = direction;
+	    		   Log.v ("Skeleton2D", "onOrientationChanged = "+direction); 
+	    		   if (direction == ORIENTATION_UNKNOWN){
+	    			   Log.v ("Skeleton2D", "ORIENTATION_UNKNOWN"); 
+	    			   return;
+	    		   }else {
+	    		       if ( direction > 55 && direction < 325 )
+	    		    	   Log.v("Skeleton2D", "orientation horizontal");
+	    		   }
+	    	   }
+	       };
+	       
+	       orientationListen.enable ();
+           
            // Hook up button presses to the appropriate event handler.
            ((Button) findViewById(R.id.back)).setOnClickListener(mBackListener); 
-           
-           
+
+        		   
            setOffscreenBitmap();
 
            (new Thread(new AnimationLoop())).start();
        }
 
-       private void setOffscreenBitmap()
+        
+      private void setOffscreenBitmap()
        {
             mCursorBitmap = Bitmap.createBitmap(10,10,Bitmap.Config.ARGB_8888);
             mCursorBitmap.eraseColor(Color.argb(128, 255, 0, 0));
