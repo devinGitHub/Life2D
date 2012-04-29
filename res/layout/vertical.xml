@@ -3,29 +3,31 @@
     android:layout_width="wrap_content"
     android:layout_height="fill_parent"
     android:visibility="visible"
-    android:id="@+id/LayoutHorizontalTop">
+    android:id="@+id/LayoutVerticalTop">
 
-    <TableRow android:layout_height="match_parent">        
+    <TableRow android:layout_height="match_parent">
       <TableLayout android:id="@+id/WorldWrapper"  android:stretchColumns="1" 
           android:layout_width="250dip"  android:layout_height="250dip">
           <!-- World View is attached here -->
       </TableLayout>
-
-      <TableLayout android:id="@+id/Separator" android:stretchColumns="2"
-          android:layout_width="6dip"  android:layout_height="250dip"
+    </TableRow>
+    <TableRow>
+      <TableLayout android:id="@+id/Separator" android:stretchColumns="2" 
+          android:layout_width="250dip"  android:layout_height="6dip" 
           android:background="#00000000" /> 
-        
-      <TableLayout android:id="@+id/User"> 
-       <TableRow >
-          <TableLayout android:id="@+id/EditorHorizontalWrapper"              
+    </TableRow>
+    <TableRow >
+      <TableLayout android:id="@+id/User">
+        <TableRow >
+          <TableLayout android:id="@+id/EditorVerticalWrapper"
              android:layout_width="150dip" android:layout_height="150dip">
            <!-- Editor View is attached here-->
-         </TableLayout>
+          </TableLayout>
        </TableRow>
        <TableRow >
            <View android:layout_height="4dip" android:background="#00000000" />
        </TableRow>
-       <TableRow>                 
+       <TableRow>
            <LinearLayout android:orientation="vertical" >
              <Button android:id="@+id/back" style="@style/ActionButton"
 	            android:layout_width="match_parent" android:layout_height="34dip"
@@ -33,7 +35,7 @@
              <Button android:id="@+id/start" style="@style/ActionButton"
 	            android:layout_width="match_parent" android:layout_height="34dip"
 	            android:text="@string/start" />
-            </LinearLayout>      
+            </LinearLayout>
          </TableRow>
       </TableLayout>
    </TableRow>    

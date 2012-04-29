@@ -13,6 +13,7 @@ import android.widget.Toast;
 import android.graphics.*;
 import android.content.*;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.res.Configuration;
 
 /**
  * @author Mike
@@ -62,39 +63,11 @@ public class Skeleton2D extends Activity
            catch(NameNotFoundException ex){
         	   int ii=0; // place holder
            }
-           
-           setContentView(R.layout.main);
-           
-           ViewGroup vgMain = (ViewGroup)findViewById(R.id.WorldWrapper);
-           mMainPanel.setFocusable(true);
-
-           vgMain.addView(mMainPanel,new ViewGroup.LayoutParams(WORLD_X,WORLD_Y));
-           
-           ViewGroup vgEdit = (ViewGroup)findViewById(R.id.EditorWrapper);
-           mEditPanel.setBackgroundColor(0xFF303030);
-           mEditPanel.setFocusable(true);
-           vgEdit.addView(mEditPanel,new ViewGroup.LayoutParams(EDITOR_X,EDITOR_Y));
-           
-           OrientationEventListener orientationListen = new OrientationEventListener(c)
-	       {
-        	   int orientation;
-        	   int lastOrientation = -1;
-	    	   @Override
-	    	   public void onOrientationChanged( int direction)
-	    	   {
-	    		   if( direction > -1 ) orientation = direction;
-	    		   Log.v ("Skeleton2D", "onOrientationChanged = "+direction); 
-	    		   if (direction == ORIENTATION_UNKNOWN){
-	    			   Log.v ("Skeleton2D", "ORIENTATION_UNKNOWN"); 
-	    			   return;
-	    		   }else {
-	    		       if ( direction > 55 && direction < 325 )
-	    		    	   Log.v("Skeleton2D", "orientation horizontal");
-	    		   }
-	    	   }
-	       };
-	       
-	       orientationListen.enable ();
+           Configuration config = getResources().getConfiguration(); 
+           if( config.orientation == Configuration.ORIENTATION_LANDSCAPE)
+               setHorizontalView();  
+           else
+        	   setVerticalView();
            
            // Hook up button presses to the appropriate event handler.
            ((Button) findViewById(R.id.back)).setOnClickListener(mBackListener); 
@@ -105,8 +78,67 @@ public class Skeleton2D extends Activity
            (new Thread(new AnimationLoop())).start();
        }
 
-        
-      private void setOffscreenBitmap()
+       public void onConfigurationChanged(Configuration newConfiguration)
+       {
+     	   switch ( newConfiguration.orientation)
+     	   {
+     	   case Configuration.ORIENTATION_PORTRAIT:
+	    	   Log.v("OrientationEventListener", "orientation vertical");
+	    		   deparentHorizontal();
+	    		   setVerticalView();
+	    	   break;
+     	   case Configuration.ORIENTATION_LANDSCAPE:
+		       Log.v("OrientationEventListener", "orientation horizontal");
+	    		   deparentVertical();
+	    		   setHorizontalView();
+	    	   break;
+       	   }	   
+       }
+ 
+       private void setHorizontalView()
+       {         
+           setContentView(R.layout.main);
+           
+           ViewGroup vgMain = (ViewGroup)findViewById(R.id.WorldWrapper);
+           mMainPanel.setFocusable(true);
+
+           vgMain.addView(mMainPanel,new ViewGroup.LayoutParams(WORLD_X,WORLD_Y));
+           ViewGroup vgEdit = (ViewGroup)findViewById(R.id.EditorHorizontalWrapper);
+           mEditPanel.setBackgroundColor(0xFF303030);
+           mEditPanel.setFocusable(true);
+           vgEdit.addView(mEditPanel,new ViewGroup.LayoutParams(EDITOR_X,EDITOR_Y));   	   
+       }
+       
+       private void deparentHorizontal()
+       {
+           ViewGroup vgMainViews = (ViewGroup)findViewById(R.id.LayoutHorizontalTop);
+           if (vgMainViews != null )
+   	           vgMainViews.removeAllViews();
+       }
+       
+       private void deparentVertical()
+       {
+           ViewGroup vgMainViews = (ViewGroup)findViewById(R.id.LayoutVerticalTop);
+           if (vgMainViews != null )
+   	           vgMainViews.removeAllViews();
+       }
+       
+       private void setVerticalView()
+       {         
+           setContentView(R.layout.vertical);
+           
+           ViewGroup vgMain = (ViewGroup)findViewById(R.id.WorldWrapper);
+           mMainPanel.setFocusable(true);
+
+           vgMain.addView(mMainPanel,new ViewGroup.LayoutParams(WORLD_X,WORLD_Y));
+           
+           ViewGroup vgEdit = (ViewGroup)findViewById(R.id.EditorVerticalWrapper);
+           mEditPanel.setBackgroundColor(0xFF303030);
+           mEditPanel.setFocusable(true);
+           vgEdit.addView(mEditPanel,new ViewGroup.LayoutParams(EDITOR_X,EDITOR_Y));   	   
+       }
+
+       private void setOffscreenBitmap()
        {
             mCursorBitmap = Bitmap.createBitmap(10,10,Bitmap.Config.ARGB_8888);
             mCursorBitmap.eraseColor(Color.argb(128, 255, 0, 0));

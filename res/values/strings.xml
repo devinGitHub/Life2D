@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="hello">Hello World, Android2DActivity!</string>
     <string name="app_name">Life2D</string>
     <string name="back">Back</string>
     <string name="start">START</string>
