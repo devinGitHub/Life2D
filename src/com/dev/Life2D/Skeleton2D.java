@@ -111,8 +111,8 @@ public class Skeleton2D extends Activity
            {
         	   mBoxX -= 1;
            }
-           mEditorPanel.updatePhysics();
            mWorldGrid.updatePhysics();
+           mEditorPanel.updatePhysics();
        }
        
 

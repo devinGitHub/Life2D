@@ -83,7 +83,40 @@ public class WorldGrid {
 			for( int j=0; j<mSizeY; j++ )
 			{
 				calcNewFramePt(i, j, mCurFrame, newFrame);
-			    if( mGrid[mCurFrame][i][j] > 0 )
+				/*
+			    if( mGrid[mCurFrame][i][j] > 0 ) //update Bitmap to current frame
+			    {
+				    mGridBitmap.setPixel(i, j, Color.GREEN);
+			    }
+			    else
+			    {
+				    mGridBitmap.setPixel(i, j, Color.BLACK);
+ 			    }
+ 			    */
+			}
+		}
+		mCurFrame = newFrame;
+		
+	}
+	public void doDraw( Canvas canvas, Paint paint )
+	{
+		updateBitmap();
+		
+		Matrix tempScaleMatrix = new Matrix();
+		tempScaleMatrix.setScale(2.0f, 2.0f);
+		
+		canvas.drawBitmap(mGridBitmap, tempScaleMatrix, paint);
+		
+		mGridCursor.doDraw(canvas, paint);
+	}
+	
+	public void updateBitmap()
+	{
+		for( int i=0; i<mSizeX; i++ )
+		{
+			for( int j=0; j<mSizeY; j++ )
+			{
+			    if( mGrid[mCurFrame][i][j] > 0 ) //update Bitmap to current frame
 			    {
 				    mGridBitmap.setPixel(i, j, Color.GREEN);
 			    }
@@ -93,17 +126,7 @@ public class WorldGrid {
  			    }
 			}
 		}
-		mCurFrame = newFrame;
 		
-	}
-	public void doDraw( Canvas canvas, Paint paint )
-	{
-		Matrix tempScaleMatrix = new Matrix();
-		tempScaleMatrix.setScale(2.0f, 2.0f);
-		
-		canvas.drawBitmap(mGridBitmap, tempScaleMatrix, paint);
-		
-		mGridCursor.doDraw(canvas, paint);
 	}
 	
 	public void calcNewFramePt( int i, int j, int curFrame, int newFrame )

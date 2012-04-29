@@ -78,7 +78,7 @@ public class EditorPanel extends View
     	{
     		for( int y=0; y<mPanelBM.getHeight(); y++ )
     		{
-    			if( mWorldGrid.getValue( curX+x, curY+y, false) > 0 )
+    			if( mWorldGrid.getValue( curX+x, curY+y, false ) > 0 )
     			{
     				mPanelBM.setPixel( x, y, Color.GREEN );
     			}
