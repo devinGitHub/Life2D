@@ -44,8 +44,6 @@ public class Skeleton2D extends Activity
        
        private Bitmap mCursorBitmap;
        
-       OrientationEventListener orientationListener;
-       
        @Override
        public void onCreate(Bundle savedInstanceState)
        {
@@ -54,11 +52,15 @@ public class Skeleton2D extends Activity
            mWorldGrid.exampleSeed2020();
 
            mMainPanel = new Panel(this);
+           mMainPanel.setFocusableInTouchMode(true);
            Context c = null;
+           
            try{
                c =  createPackageContext("com.dev.Life2D", 0);
                mEditorPanel = new EditorPanel( c, mWorldGrid ); 
                mEditPanel = mEditorPanel;//mEditPanel = new View(c);
+               mEditPanel.setFocusableInTouchMode(true);
+              
            }
            catch(NameNotFoundException ex){
         	   int ii=0; // place holder
@@ -135,7 +137,14 @@ public class Skeleton2D extends Activity
            ViewGroup vgEdit = (ViewGroup)findViewById(R.id.EditorVerticalWrapper);
            mEditPanel.setBackgroundColor(0xFF303030);
            mEditPanel.setFocusable(true);
-           vgEdit.addView(mEditPanel,new ViewGroup.LayoutParams(EDITOR_X,EDITOR_Y));   	   
+           vgEdit.addView(mEditPanel,new ViewGroup.LayoutParams(EDITOR_X,EDITOR_Y));
+ 
+           // Hook up button presses to the appropriate event handler.
+           ((Button) findViewById(R.id.back)).setOnClickListener(mBackListener); 
+           
+           setOffscreenBitmap();
+
+           (new Thread(new AnimationLoop())).start();
        }
 
        private void setOffscreenBitmap()
@@ -163,8 +172,8 @@ public class Skeleton2D extends Activity
            {
         	   mBoxX -= 1;
            }
-           //mEditorPanel.updateBitmap();
            mWorldGrid.updatePhysics();
+           mEditorPanel.updatePhysics();
        }
        
 
@@ -209,6 +218,25 @@ public class Skeleton2D extends Activity
                finish();
            }
        };
+       
+
+	   OnTouchListener mTouchListener = new OnTouchListener() 
+	   {
+			public boolean onTouch(View v, MotionEvent event)
+			{
+				
+				float fX = event.getX();
+				float fY = event.getY();
+				int x = (int)(fX*mWorldGrid.mSizeX/mMainPanel.getWidth());
+				int y = (int)(fY*mWorldGrid.mSizeY/mMainPanel.getHeight());
+				
+				mWorldGrid.mGridCursor.mPosX = x;
+				mWorldGrid.mGridCursor.mPosY = y;
+				
+				return true;
+			}
+		};
+
        
        @Override
        public boolean onKeyDown(int keyCode, KeyEvent event)
@@ -302,6 +330,8 @@ public class Skeleton2D extends Activity
                        }
                        catch(InterruptedException ex) {}
                 	   
+                       mEditorPanel.updatePhysics();
+                       
                 	   mMainPanel.postInvalidate();
                        mEditorPanel.postInvalidate();
                    }               

@@ -32,10 +32,10 @@ public class WorldGrid {
 		mSizeY = sizeY;
 		mCurFrame = 0;
 		
-		mGridCursor = new GridCursor( 2.0f, mSizeX, mSizeY );
+		mGridCursor = new GridCursor( 2.0f );
 	}
 	
-	public void togglePoint( int x, int y, boolean pushToBitmap )
+	public void togglePoint( int x, int y, boolean pushToBitmap)
 	{
 		x = getWrapCoordX( x );
 		y = getWrapCoordY( y );
@@ -59,12 +59,20 @@ public class WorldGrid {
 		
 	}
 	
-	public int getValue( int x, int y )
+	public int getValue( int x, int y, boolean offFrame )
 	{
 		x = getWrapCoordX( x );
 		y = getWrapCoordY( y );
-		//get the value as currently displayed on-screen, rather than next frame
-		return  mGrid[(mCurFrame+1)%2][x][y]; 
+		
+		if( offFrame )
+		{
+			//get the value as currently off-screen, rather than current frame
+			return  mGrid[(mCurFrame+1)%2][x][y];
+		}
+		else
+		{
+			return  mGrid[mCurFrame][x][y];			
+		}
 	}
 	
 	public void updatePhysics()
@@ -75,7 +83,30 @@ public class WorldGrid {
 			for( int j=0; j<mSizeY; j++ )
 			{
 				calcNewFramePt(i, j, mCurFrame, newFrame);
-			    if( mGrid[mCurFrame][i][j] > 0 )
+			}
+		}
+		mCurFrame = newFrame;
+		
+	}
+	public void doDraw( Canvas canvas, Paint paint )
+	{
+		updateBitmap();
+		
+		Matrix tempScaleMatrix = new Matrix();
+		tempScaleMatrix.setScale(2.0f, 2.0f);
+		
+		canvas.drawBitmap(mGridBitmap, tempScaleMatrix, paint);
+		
+		mGridCursor.doDraw(canvas, paint);
+	}
+	
+	public void updateBitmap()
+	{
+		for( int i=0; i<mSizeX; i++ )
+		{
+			for( int j=0; j<mSizeY; j++ )
+			{
+			    if( mGrid[mCurFrame][i][j] > 0 ) //update Bitmap to current frame
 			    {
 				    mGridBitmap.setPixel(i, j, Color.GREEN);
 			    }
@@ -85,17 +116,7 @@ public class WorldGrid {
  			    }
 			}
 		}
-		mCurFrame = newFrame;
 		
-	}
-	public void doDraw( Canvas canvas, Paint paint )
-	{
-		Matrix tempScaleMatrix = new Matrix();
-		tempScaleMatrix.setScale(2.0f, 2.0f);
-		
-		canvas.drawBitmap(mGridBitmap, tempScaleMatrix, paint);
-		
-		mGridCursor.doDraw(canvas, paint);
 	}
 	
 	public void calcNewFramePt( int i, int j, int curFrame, int newFrame )
