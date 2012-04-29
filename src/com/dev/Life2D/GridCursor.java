@@ -13,15 +13,12 @@ class GridCursor
 	private float mScaleFactor = 1.0f;
 	public int mPosX, mPosY;
 	
-	private int mGridSizeX, mGridSizeY;
 	
 	public static final int CURSOR_BOX_HALFSIZE = 4; //4 pixels/points to any side of center
 	
-	public GridCursor( float scaleFactor, int gridSizeX, int gridSizeY )
+	public GridCursor( float scaleFactor )
 	{
 		mScaleFactor = scaleFactor;
-		mGridSizeX = gridSizeX;
-		mGridSizeY = gridSizeY;
 		mPosX = 0;
 		mPosY = 0;
 		

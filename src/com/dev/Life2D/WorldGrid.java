@@ -32,7 +32,7 @@ public class WorldGrid {
 		mSizeY = sizeY;
 		mCurFrame = 0;
 		
-		mGridCursor = new GridCursor( 2.0f, mSizeX, mSizeY );
+		mGridCursor = new GridCursor( 2.0f );
 	}
 	
 	public void togglePoint( int x, int y, boolean pushToBitmap)
@@ -59,14 +59,14 @@ public class WorldGrid {
 		
 	}
 	
-	public int getValue( int x, int y, boolean curFrame )
+	public int getValue( int x, int y, boolean offFrame )
 	{
 		x = getWrapCoordX( x );
 		y = getWrapCoordY( y );
 		
-		if( curFrame )
+		if( offFrame )
 		{
-			//get the value as currently displayed on-screen, rather than next frame
+			//get the value as currently off-screen, rather than current frame
 			return  mGrid[(mCurFrame+1)%2][x][y];
 		}
 		else
@@ -83,16 +83,6 @@ public class WorldGrid {
 			for( int j=0; j<mSizeY; j++ )
 			{
 				calcNewFramePt(i, j, mCurFrame, newFrame);
-				/*
-			    if( mGrid[mCurFrame][i][j] > 0 ) //update Bitmap to current frame
-			    {
-				    mGridBitmap.setPixel(i, j, Color.GREEN);
-			    }
-			    else
-			    {
-				    mGridBitmap.setPixel(i, j, Color.BLACK);
- 			    }
- 			    */
 			}
 		}
 		mCurFrame = newFrame;
